@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 
 enum MainTab {
   films,
+  favorites,
+  watchlist,
+  history,
   profile,
   settings,
 }
