@@ -73,8 +73,8 @@ class AppTheme {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: Color(0xFF7C4DFF),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: const Color(0xFF7C4DFF),
         foregroundColor: Colors.white,
         elevation: 4,
         shape: RoundedRectangleBorder(
