@@ -1,5 +1,5 @@
 class FilmsDatabase {
-  static const List<Map<String, dynamic>> films = [
+  static const List<Map<String, Object>> films = [
     {'id': 1, 'title': 'The Shawshank Redemption', 'genre': 'Drama', 'rating': 9.3, 'year': 1994, 'posterUrl': 'https://via.placeholder.com/300x450?text=Shawshank'},
     {'id': 2, 'title': 'The Godfather', 'genre': 'Crime', 'rating': 9.2, 'year': 1972, 'posterUrl': 'https://via.placeholder.com/300x450?text=Godfather'},
     {'id': 3, 'title': 'The Dark Knight', 'genre': 'Action', 'rating': 9.0, 'year': 2008, 'posterUrl': 'https://via.placeholder.com/300x450?text=Dark+Knight'},
@@ -98,7 +98,7 @@ class FilmsDatabase {
     {'id': 96, 'title': 'Children of Heaven', 'genre': 'Drama', 'rating': 8.2, 'year': 1997, 'posterUrl': 'https://via.placeholder.com/300x450?text=Children+Heaven'},
     {'id': 97, 'title': 'The Third Man', 'genre': 'Thriller', 'rating': 8.2, 'year': 1949, 'posterUrl': 'https://via.placeholder.com/300x450?text=Third+Man'},
     {'id': 98, 'title': 'The Gold Rush', 'genre': 'Comedy', 'rating': 8.2, 'year': 1925, 'posterUrl': 'https://via.placeholder.com/300x450?text=Gold+Rush'},
-    {'id': 99, 'title': 'Pan's Labyrinth', 'genre': 'Fantasy', 'rating': 8.2, 'year': 2006, 'posterUrl': 'https://via.placeholder.com/300x450?text=Pans+Labyrinth'},
+    {'id': 99, 'title': 'Pans Labyrinth', 'genre': 'Fantasy', 'rating': 8.2, 'year': 2006, 'posterUrl': 'https://via.placeholder.com/300x450?text=Pans+Labyrinth'},
     {'id': 100, 'title': 'My Neighbor Totoro', 'genre': 'Animation', 'rating': 8.2, 'year': 1988, 'posterUrl': 'https://via.placeholder.com/300x450?text=Totoro'},
   ];
 }
