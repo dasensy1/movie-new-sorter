@@ -46,6 +46,7 @@ class FilmCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         film.title,
@@ -83,7 +84,7 @@ class FilmCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const Spacer(),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Container(

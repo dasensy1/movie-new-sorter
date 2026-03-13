@@ -20,10 +20,7 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = context.read<FilmsViewModel>();
-      if (viewModel.films.isEmpty) {
-        viewModel.loadFilms();
-      }
+      context.read<FilmsViewModel>().loadFilms();
     });
   }
 

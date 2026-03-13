@@ -7,7 +7,7 @@ class LoadingOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withValues(alpha: 0.8),
+      color: const Color(0xFF121212),
       child: const Center(
         child: RotatingLogo(),
       ),
