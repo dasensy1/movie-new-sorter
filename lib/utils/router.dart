@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../views/films_list_screen.dart';
 import '../views/film_detail_screen.dart';
