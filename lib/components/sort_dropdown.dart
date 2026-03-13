@@ -49,6 +49,16 @@ class SortDropdown extends StatelessWidget {
             ],
           ),
         ),
+        DropdownMenuItem(
+          value: SortType.smart,
+          child: Row(
+            children: [
+              Icon(Icons.auto_awesome, size: 18, color: Colors.purple),
+              SizedBox(width: 8),
+              Text('Smart'),
+            ],
+          ),
+        ),
       ],
       onChanged: (value) {
         if (value != null) {

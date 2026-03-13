@@ -55,6 +55,18 @@ class FilmsViewModel extends ChangeNotifier {
       case SortType.title:
         _sortedFilms.sort((a, b) => a.title.compareTo(b.title));
         break;
+      case SortType.smart:
+        _sortedFilms.sort((a, b) {
+          final currentYear = DateTime.now().year;
+          final aAge = currentYear - a.year;
+          final bAge = currentYear - b.year;
+          final aRecencyScore = 1.0 / (aAge + 1);
+          final bRecencyScore = 1.0 / (bAge + 1);
+          final aCombinedScore = (a.rating * 0.7) + (aRecencyScore * 10 * 0.3);
+          final bCombinedScore = (b.rating * 0.7) + (bRecencyScore * 10 * 0.3);
+          return bCombinedScore.compareTo(aCombinedScore);
+        });
+        break;
     }
   }
 }
