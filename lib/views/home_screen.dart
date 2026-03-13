@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/main_viewmodel.dart';
 import 'films_list_screen.dart';
+import 'favorites_screen.dart';
+import 'watchlist_screen.dart';
+import 'history_screen.dart';
 import 'profile_screen.dart';
 import 'settings_screen.dart';
 
@@ -39,6 +42,12 @@ class HomeScreen extends StatelessWidget {
     switch (tab) {
       case MainTab.films:
         return const FilmsListScreen(key: ValueKey('films'));
+      case MainTab.favorites:
+        return const FavoritesScreen(key: ValueKey('favorites'));
+      case MainTab.watchlist:
+        return const WatchlistScreen(key: ValueKey('watchlist'));
+      case MainTab.history:
+        return const HistoryScreen(key: ValueKey('history'));
       case MainTab.profile:
         return const ProfileScreen(key: ValueKey('profile'));
       case MainTab.settings:
@@ -61,10 +70,10 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
                 context,
@@ -72,6 +81,30 @@ class HomeScreen extends StatelessWidget {
                 Icons.movie_outlined,
                 Icons.movie,
                 'Films',
+                viewModel,
+              ),
+              _buildNavItem(
+                context,
+                MainTab.favorites,
+                Icons.favorite_outline,
+                Icons.favorite,
+                'Favorites',
+                viewModel,
+              ),
+              _buildNavItem(
+                context,
+                MainTab.watchlist,
+                Icons.bookmark_outline,
+                Icons.bookmark,
+                'Watchlist',
+                viewModel,
+              ),
+              _buildNavItem(
+                context,
+                MainTab.history,
+                Icons.history,
+                Icons.history,
+                'History',
                 viewModel,
               ),
               _buildNavItem(
@@ -113,6 +146,7 @@ class HomeScreen extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
           color: isSelected ? Colors.grey[850] : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
@@ -132,21 +166,15 @@ class HomeScreen extends StatelessWidget {
                 size: 24,
               ),
             ),
-            if (isSelected) ...[
-              const SizedBox(width: 8),
-              AnimatedOpacity(
-                opacity: isSelected ? 1 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.grey[600],
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                fontSize: 14,
               ),
-            ],
+            ),
           ],
         ),
       ),
