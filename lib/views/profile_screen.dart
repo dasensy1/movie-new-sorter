@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/auth_viewmodel.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthViewModel>();
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -17,7 +21,14 @@ class ProfileScreen extends StatelessWidget {
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.grey[850],
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.grey[800]!,
+                      Colors.grey[900]!,
+                    ],
+                  ),
                 ),
                 child: const Icon(
                   Icons.person,
@@ -27,22 +38,33 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Guest User',
+                auth.username ?? 'Guest User',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w800,
                     ),
               ),
               const SizedBox(height: 8),
-              Text(
-                'guest@example.com',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[500],
-                    ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.grey[850],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Member',
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 12,
+                  ),
+                ),
               ),
               const SizedBox(height: 48),
               _buildStatRow(context),
               const SizedBox(height: 32),
               _buildActionButtons(context),
+              const Spacer(),
+              _buildLogoutButton(context, auth),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -67,7 +89,7 @@ class ProfileScreen extends StatelessWidget {
         Text(
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w800,
                 color: Theme.of(context).colorScheme.primary,
               ),
         ),
@@ -108,6 +130,53 @@ class ProfileScreen extends StatelessWidget {
           ),
           side: BorderSide(color: Colors.grey[800]!),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(BuildContext context, AuthViewModel auth) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: const Color(0xFF1E1E1E),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: const Text('Log Out'),
+              content: const Text('Are you sure you want to log out?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    auth.logout();
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red[700],
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Log Out'),
+                ),
+              ],
+            ),
+          );
+        },
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          foregroundColor: Colors.red[400],
+          side: BorderSide(color: Colors.red[700]!),
+        ),
+        child: const Text('Log Out'),
       ),
     );
   }
