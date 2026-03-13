@@ -5,6 +5,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      fontFamily: 'Roboto',
       colorScheme: ColorScheme.dark(
         surface: const Color(0xFF121212),
         primary: const Color(0xFFE0E0E0),
@@ -19,6 +20,59 @@ class AppTheme {
         backgroundColor: Color(0xFF121212),
         elevation: 0,
         centerTitle: true,
+        titleTextStyle: TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 32,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5,
+        ),
+        headlineMedium: TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+        ),
+        headlineSmall: TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+        ),
+        titleLarge: TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+        ),
+        titleMedium: TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+        titleSmall: TextStyle(
+          color: Color(0xFFE0E0E0),
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+        bodyLarge: TextStyle(
+          color: Color(0xFFBDBDBD),
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        bodyMedium: TextStyle(
+          color: Color(0xFF9E9E9E),
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+        bodySmall: TextStyle(
+          color: Color(0xFF757575),
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
       ),
       cardTheme: CardThemeData(
         color: const Color(0xFF1E1E1E),
@@ -36,6 +90,10 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -46,14 +104,15 @@ class AppTheme {
             borderRadius: BorderRadius.circular(16),
           ),
           side: const BorderSide(color: Color(0xFF2A2A2A)),
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
         ),
       ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
           foregroundColor: const Color(0xFFE0E0E0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -73,8 +132,8 @@ class AppTheme {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: const Color(0xFFE0E0E0),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: Color(0xFFE0E0E0),
         foregroundColor: Colors.black,
         elevation: 4,
         shape: RoundedRectangleBorder(

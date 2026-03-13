@@ -4,11 +4,15 @@ import '../models/film.dart';
 class FilmCard extends StatelessWidget {
   final Film film;
   final VoidCallback onTap;
+  final VoidCallback onFavorite;
+  final VoidCallback onWatchlist;
 
   const FilmCard({
     super.key,
     required this.film,
     required this.onTap,
+    required this.onFavorite,
+    required this.onWatchlist,
   });
 
   @override
@@ -51,7 +55,7 @@ class FilmCard extends StatelessWidget {
                       Text(
                         film.title,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w800,
                             ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -99,8 +103,26 @@ class FilmCard extends StatelessWidget {
                           Text(
                             '${film.rating}',
                             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w800,
                                 ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          _buildActionButton(
+                            context,
+                            icon: Icons.favorite_outline,
+                            label: 'Like',
+                            onTap: onFavorite,
+                          ),
+                          const SizedBox(width: 8),
+                          _buildActionButton(
+                            context,
+                            icon: Icons.bookmark_outline,
+                            label: 'List',
+                            onTap: onWatchlist,
                           ),
                         ],
                       ),
@@ -111,6 +133,41 @@ class FilmCard extends StatelessWidget {
               Icon(
                 Icons.chevron_right,
                 color: Colors.grey[700],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey[850],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 16, color: Colors.grey[400]),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[400],
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
             ],
           ),
