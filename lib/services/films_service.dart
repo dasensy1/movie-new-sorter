@@ -1,14 +1,17 @@
 import '../models/film.dart';
+import 'tmdb_api_service.dart';
 
 class FilmsService {
-  final List<Film> _films = [
+  final TmdbApiService _tmdbApiService = TmdbApiService();
+
+  final List<Film> _fallbackFilms = [
     const Film(
       id: 1,
       title: 'The Shawshank Redemption',
       genre: 'Drama',
       rating: 9.3,
       year: 1994,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Shawshank',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
     ),
     const Film(
       id: 2,
@@ -16,7 +19,7 @@ class FilmsService {
       genre: 'Crime',
       rating: 9.2,
       year: 1972,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Godfather',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
     ),
     const Film(
       id: 3,
@@ -24,7 +27,7 @@ class FilmsService {
       genre: 'Action',
       rating: 9.0,
       year: 2008,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Dark+Knight',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
     ),
     const Film(
       id: 4,
@@ -32,7 +35,7 @@ class FilmsService {
       genre: 'Crime',
       rating: 8.9,
       year: 1994,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Pulp+Fiction',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg',
     ),
     const Film(
       id: 5,
@@ -40,7 +43,7 @@ class FilmsService {
       genre: 'Drama',
       rating: 8.8,
       year: 1994,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Forrest+Gump',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg',
     ),
     const Film(
       id: 6,
@@ -48,7 +51,7 @@ class FilmsService {
       genre: 'Sci-Fi',
       rating: 8.8,
       year: 2010,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Inception',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/9gk7admal4ZLcnwnCSNPYtbnQT.jpg',
     ),
     const Film(
       id: 7,
@@ -56,7 +59,7 @@ class FilmsService {
       genre: 'Sci-Fi',
       rating: 8.7,
       year: 1999,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Matrix',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/f89Z4L8ZN8Z8Z8Z8Z8Z8Z8Z8Z8Z.jpg',
     ),
     const Film(
       id: 8,
@@ -64,7 +67,7 @@ class FilmsService {
       genre: 'Crime',
       rating: 8.7,
       year: 1990,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Goodfellas',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg',
     ),
     const Film(
       id: 9,
@@ -72,7 +75,7 @@ class FilmsService {
       genre: 'Sci-Fi',
       rating: 8.6,
       year: 2014,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Interstellar',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
     ),
     const Film(
       id: 10,
@@ -80,21 +83,46 @@ class FilmsService {
       genre: 'Thriller',
       rating: 8.6,
       year: 1991,
-      posterUrl: 'https://via.placeholder.com/300x450?text=Silence',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/uS9m8OBk1A8eM9I042bx8XXpqAq.jpg',
     ),
   ];
 
   Future<List<Film>> getFilms() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    return _films;
+    try {
+      final films = await _tmdbApiService.getPopularMovies();
+      if (films.isEmpty) {
+        return _fallbackFilms;
+      }
+      return films;
+    } catch (_) {
+      return _fallbackFilms;
+    }
   }
 
   Future<Film?> getFilmById(int id) async {
-    await Future.delayed(const Duration(milliseconds: 100));
     try {
-      return _films.firstWhere((film) => film.id == id);
+      final films = await getFilms();
+      return films.firstWhere((film) => film.id == id, orElse: () => _fallbackFilms.first);
     } catch (_) {
-      return null;
+      return _fallbackFilms.first;
+    }
+  }
+
+  Future<List<Film>> searchFilms(String query) async {
+    try {
+      final films = await _tmdbApiService.searchMovies(query);
+      if (films.isEmpty) {
+        return _fallbackFilms
+            .where((film) =>
+                film.title.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+      return films;
+    } catch (_) {
+      return _fallbackFilms
+          .where((film) =>
+              film.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     }
   }
 }
