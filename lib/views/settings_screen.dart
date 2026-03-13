@@ -116,14 +116,14 @@ class SettingsScreen extends StatelessWidget {
           child: Text(
             title,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Colors.grey[400],
+                  color: Colors.grey[600],
                   fontWeight: FontWeight.w600,
                 ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey[850],
+            color: const Color(0xFF1E1E1E),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -147,12 +147,12 @@ class SettingsScreen extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
+          color: Colors.grey[850],
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
           icon,
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          color: Colors.grey[400],
           size: 20,
         ),
       ),
@@ -164,7 +164,7 @@ class SettingsScreen extends StatelessWidget {
           ? Text(
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[400],
+                    color: Colors.grey[600],
                   ),
             )
           : null,

@@ -21,7 +21,7 @@ class SortDropdown extends StatelessWidget {
       ),
       child: DropdownButton<SortType>(
         value: currentSortType,
-        dropdownColor: Colors.grey[900],
+        dropdownColor: const Color(0xFF1E1E1E),
         underline: const SizedBox(),
         icon: const Icon(Icons.sort, color: Colors.white70, size: 20),
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(

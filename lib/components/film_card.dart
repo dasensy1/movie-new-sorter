@@ -16,7 +16,7 @@ class FilmCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF16213E),
+        color: const Color(0xFF1E1E1E),
         borderRadius: BorderRadius.circular(16),
       ),
       child: InkWell(
@@ -64,13 +64,13 @@ class FilmCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.grey[800],
+                              color: Colors.grey[850],
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               film.genre,
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[300],
+                                    color: Colors.grey[400],
                                   ),
                             ),
                           ),
@@ -78,7 +78,7 @@ class FilmCard extends StatelessWidget {
                           Text(
                             '${film.year}',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[500],
+                                  color: Colors.grey[600],
                                 ),
                           ),
                         ],
@@ -89,7 +89,7 @@ class FilmCard extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: Colors.amber.withValues(alpha: 0.2),
+                              color: Colors.amber.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Icon(Icons.star, color: Colors.amber, size: 16),
@@ -109,7 +109,7 @@ class FilmCard extends StatelessWidget {
               ),
               Icon(
                 Icons.chevron_right,
-                color: Colors.grey[600],
+                color: Colors.grey[700],
               ),
             ],
           ),

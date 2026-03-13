@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'logo.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -17,19 +18,12 @@ class ProfileScreen extends StatelessWidget {
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.secondary,
-                    ],
-                  ),
+                  color: Colors.grey[850],
                 ),
                 child: const Icon(
                   Icons.person,
                   size: 60,
-                  color: Colors.white,
+                  color: Colors.white70,
                 ),
               ),
               const SizedBox(height: 24),
@@ -43,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
               Text(
                 'guest@example.com',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[400],
+                      color: Colors.grey[500],
                     ),
               ),
               const SizedBox(height: 48),
@@ -82,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[400],
+                color: Colors.grey[600],
               ),
         ),
       ],
@@ -106,13 +100,14 @@ class ProfileScreen extends StatelessWidget {
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: () {},
-        icon: Icon(icon, size: 20),
-        label: Text(label),
+        icon: Icon(icon, size: 20, color: Colors.grey[400]),
+        label: Text(label, style: TextStyle(color: Colors.grey[300])),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
+          side: BorderSide(color: Colors.grey[800]!),
         ),
       ),
     );

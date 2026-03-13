@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/film.dart';
 import '../services/films_service.dart';
+import '../components/loading_overlay.dart';
 
 class FilmDetailScreen extends StatefulWidget {
   final int filmId;
@@ -54,15 +55,18 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const LoadingOverlay();
     }
 
     if (_film == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Film Not Found')),
-        body: const Center(child: Text('Film not found')),
+        body: Center(
+          child: Text(
+            'Film not found',
+            style: TextStyle(color: Colors.grey[500]),
+          ),
+        ),
       );
     }
 
@@ -99,7 +103,7 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
     return SliverAppBar(
       expandedHeight: 350,
       pinned: true,
-      backgroundColor: Colors.grey[900],
+      backgroundColor: const Color(0xFF121212),
       leading: Container(
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -174,12 +178,12 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: Colors.grey[400]),
+          Icon(icon, size: 16, color: Colors.grey[500]),
           const SizedBox(width: 6),
           Text(
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[300],
+                  color: Colors.grey[400],
                 ),
           ),
         ],
@@ -199,7 +203,7 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.amber.withValues(alpha: 0.2),
+              color: Colors.amber.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.star, color: Colors.amber, size: 32),
@@ -217,7 +221,7 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
               Text(
                 'out of 10',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[400],
+                      color: Colors.grey[500],
                     ),
               ),
             ],
@@ -243,7 +247,7 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
           'this would contain detailed information about the film plot, '
           'cast, and production details.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[300],
+                color: Colors.grey[400],
                 height: 1.6,
               ),
         ),
@@ -257,10 +261,11 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
         Expanded(
           child: OutlinedButton.icon(
             onPressed: () {},
-            icon: const Icon(Icons.bookmark_outline),
-            label: const Text('Watchlist'),
+            icon: const Icon(Icons.bookmark_outline, color: Colors.grey[400]),
+            label: const Text('Watchlist', style: TextStyle(color: Colors.grey[300])),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
+              side: BorderSide(color: Colors.grey[800]!),
             ),
           ),
         ),

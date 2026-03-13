@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../components/film_card.dart';
 import '../components/sort_dropdown.dart';
+import '../components/loading_overlay.dart';
 import '../viewmodels/films_viewmodel.dart';
 
 class FilmsListScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
             child: Consumer<FilmsViewModel>(
               builder: (context, viewModel, _) {
                 if (viewModel.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const LoadingOverlay();
                 }
 
                 if (viewModel.error != null) {
@@ -44,7 +45,7 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        Icon(Icons.error_outline, size: 64, color: Colors.grey[600]),
                         const SizedBox(height: 16),
                         Text(
                           'Error loading films',
@@ -53,7 +54,9 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
                         const SizedBox(height: 8),
                         Text(
                           viewModel.error!,
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[500],
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
@@ -67,8 +70,11 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
                 }
 
                 if (viewModel.films.isEmpty) {
-                  return const Center(
-                    child: Text('No films available'),
+                  return Center(
+                    child: Text(
+                      'No films available',
+                      style: TextStyle(color: Colors.grey[500]),
+                    ),
                   );
                 }
 

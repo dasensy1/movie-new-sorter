@@ -4,6 +4,7 @@ import '../viewmodels/main_viewmodel.dart';
 import 'films_list_screen.dart';
 import 'profile_screen.dart';
 import 'settings_screen.dart';
+import '../components/loading_overlay.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -52,7 +53,7 @@ class HomeScreen extends StatelessWidget {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: const Color(0xFF121212),
         border: Border(
           top: BorderSide(
             color: Colors.grey[800]!,
@@ -106,7 +107,6 @@ class HomeScreen extends StatelessWidget {
     MainViewModel viewModel,
   ) {
     final isSelected = viewModel.currentTab == tab;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: () => viewModel.setTab(tab),
@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primaryContainer : Colors.transparent,
+          color: isSelected ? Colors.grey[850] : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -129,9 +129,7 @@ class HomeScreen extends StatelessWidget {
               child: Icon(
                 isSelected ? filledIcon : outlinedIcon,
                 key: ValueKey(isSelected),
-                color: isSelected
-                    ? colorScheme.onPrimaryContainer
-                    : Colors.grey[400],
+                color: isSelected ? Colors.white : Colors.grey[600],
                 size: 24,
               ),
             ),
@@ -142,8 +140,8 @@ class HomeScreen extends StatelessWidget {
                 duration: const Duration(milliseconds: 200),
                 child: Text(
                   label,
-                  style: TextStyle(
-                    color: colorScheme.onPrimaryContainer,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
