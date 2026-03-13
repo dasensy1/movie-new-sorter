@@ -44,6 +44,9 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     const MoviesPage(),
     const SearchPage(),
+    const ListsPage(),
+    const ReviewsPage(),
+    const SettingsPage(),
     const ProfilePage(),
   ];
 
@@ -66,6 +69,21 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.search_outlined, color: Colors.white70),
             selectedIcon: Icon(Icons.search, color: Color(0xFF00E054)),
             label: 'Поиск',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.list_outlined, color: Colors.white70),
+            selectedIcon: Icon(Icons.list, color: Color(0xFF00E054)),
+            label: 'Списки',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.rate_review_outlined, color: Colors.white70),
+            selectedIcon: Icon(Icons.rate_review, color: Color(0xFF00E054)),
+            label: 'Рецензии',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined, color: Colors.white70),
+            selectedIcon: Icon(Icons.settings, color: Color(0xFF00E054)),
+            label: 'Настройки',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outlined, color: Colors.white70),
@@ -498,6 +516,267 @@ class ProfilePage extends StatelessWidget {
             time,
             style: TextStyle(color: Colors.white38, fontSize: 11),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class ListsPage extends StatelessWidget {
+  const ListsPage({super.key});
+
+  final List<Map<String, String>> lists = const [
+    {'title': 'Любимые фильмы 2025', 'count': '42', 'icon': '❤️'},
+    {'title': 'Фильмы для просмотра', 'count': '128', 'icon': '📋'},
+    {'title': 'Лучшие триллеры', 'count': '35', 'icon': '😱'},
+    {'title': 'Классика кино', 'count': '50', 'icon': '🎬'},
+    {'title': 'Фантастика', 'count': '67', 'icon': '🚀'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          floating: true,
+          title: const Text(
+            'Мои списки',
+            style: TextStyle(color: Color(0xFF00E054), fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline, color: Color(0xFF00E054)),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _buildListItem(lists[index]),
+              childCount: lists.length,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildListItem(Map<String, String> list) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1C2228),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Text(list['icon']!, style: const TextStyle(fontSize: 32)),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  list['title']!,
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${list['count']} фильмов',
+                  style: TextStyle(color: Colors.white54, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: Colors.white54),
+        ],
+      ),
+    );
+  }
+}
+
+class ReviewsPage extends StatelessWidget {
+  const ReviewsPage({super.key});
+
+  final List<Map<String, String>> reviews = const [
+    {
+      'movie': 'Побег из Шоушенка',
+      'rating': '5.0',
+      'text': 'Шедевр! Лучший фильм о надежде и дружбе.',
+      'date': '10 мар 2026',
+    },
+    {
+      'movie': 'Крёстный отец',
+      'rating': '4.5',
+      'text': 'Великолепная игра актёров и режиссура.',
+      'date': '8 мар 2026',
+    },
+    {
+      'movie': 'Тёмный рыцарь',
+      'rating': '4.0',
+      'text': 'Хит Ledger великолепен в роли Джокера.',
+      'date': '5 мар 2026',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          floating: true,
+          title: const Text(
+            'Мои рецензии',
+            style: TextStyle(color: Color(0xFF00E054), fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.edit, color: Color(0xFF00E054)),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _buildReviewItem(reviews[index]),
+              childCount: reviews.length,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReviewItem(Map<String, String> review) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1C2228),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.movie, color: Colors.white54, size: 18),
+              const SizedBox(width: 8),
+              Text(
+                review['movie']!,
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF00E054).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.star, color: Color(0xFF00E054), size: 14),
+                    const SizedBox(width: 4),
+                    Text(
+                      review['rating']!,
+                      style: const TextStyle(color: Color(0xFF00E054), fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Text(
+                review['date']!,
+                style: TextStyle(color: Colors.white38, fontSize: 12),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            review['text']!,
+            style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.4),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          floating: true,
+          title: const Text(
+            'Настройки',
+            style: TextStyle(color: Color(0xFF00E054), fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _buildSettingItem(index),
+              childCount: 6,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingItem(int index) {
+    final settings = [
+      {'icon': Icons.account_circle, 'title': 'Аккаунт', 'subtitle': 'Управление профилем'},
+      {'icon': Icons.notifications, 'title': 'Уведомления', 'subtitle': 'Настройка уведомлений'},
+      {'icon': Icons.privacy_tip, 'title': 'Конфиденциальность', 'subtitle': 'Настройки приватности'},
+      {'icon': Icons.palette, 'title': 'Тема', 'subtitle': 'Тёмная тема'},
+      {'icon': Icons.language, 'title': 'Язык', 'subtitle': 'Русский'},
+      {'icon': Icons.info, 'title': 'О приложении', 'subtitle': 'Версия 1.0.0'},
+    ];
+
+    final setting = settings[index];
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1C2228),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(setting['icon'] as IconData, color: const Color(0xFF00E054), size: 24),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  setting['title'] as String,
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  setting['subtitle'] as String,
+                  style: TextStyle(color: Colors.white54, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: Colors.white54),
         ],
       ),
     );
