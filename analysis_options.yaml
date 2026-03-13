@@ -8,3 +8,4 @@ linter:
     - avoid_print
     - avoid_unnecessary_containers
     - prefer_single_quotes
+    - unnecessary_underscores: false
