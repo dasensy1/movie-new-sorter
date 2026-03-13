@@ -27,10 +27,86 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Films'),
-        actions: [
+    return SafeArea(
+      child: Column(
+        children: [
+          _buildHeader(context),
+          Expanded(
+            child: Consumer<FilmsViewModel>(
+              builder: (context, viewModel, _) {
+                if (viewModel.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (viewModel.error != null) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error loading films',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          viewModel.error!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => viewModel.loadFilms(),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                if (viewModel.films.isEmpty) {
+                  return const Center(
+                    child: Text('No films available'),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: viewModel.films.length,
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  itemBuilder: (context, index) {
+                    final film = viewModel.films[index];
+                    return FilmCard(
+                      film: film,
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          '/film',
+                          arguments: film.id,
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Text(
+            'Films',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const Spacer(),
           Consumer<FilmsViewModel>(
             builder: (context, viewModel, _) {
               return SortDropdown(
@@ -39,64 +115,7 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
               );
             },
           ),
-          const SizedBox(width: 16),
         ],
-      ),
-      body: Consumer<FilmsViewModel>(
-        builder: (context, viewModel, _) {
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (viewModel.error != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error loading films',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    viewModel.error!,
-                    style: Theme.of(context).textTheme.bodySmall,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => viewModel.loadFilms(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (viewModel.films.isEmpty) {
-            return const Center(
-              child: Text('No films available'),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: viewModel.films.length,
-            itemBuilder: (context, index) {
-              final film = viewModel.films[index];
-              return FilmCard(
-                film: film,
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    '/film',
-                    arguments: film.id,
-                  );
-                },
-              );
-            },
-          );
-        },
       ),
     );
   }
