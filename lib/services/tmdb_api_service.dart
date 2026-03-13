@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/film.dart';
+import '../config/api_config.dart';
 
 class TmdbApiService {
-  static const String _baseUrl = 'https://api.themoviedb.org/3';
-  static const String _apiKey = 'YOUR_TMDB_API_KEY';
-  static const String _imageBaseUrl = 'https://image.tmdb.org/t/p/w300';
+  final String _baseUrl = ApiConfig.tmdbBaseUrl;
+  final String _apiKey = ApiConfig.tmdbApiKey;
+  final String _imageBaseUrl = ApiConfig.imageBaseUrl;
 
   Future<List<Film>> getPopularMovies() async {
     final url = Uri.parse('$_baseUrl/movie/popular?api_key=$_apiKey&language=en-US&page=1');
