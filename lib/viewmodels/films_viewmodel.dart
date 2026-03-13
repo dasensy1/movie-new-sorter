@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/film.dart';
 import '../services/films_service.dart';
 import '../utils/sort_type.dart';
+import '../utils/view_mode.dart';
 
 class FilmsViewModel extends ChangeNotifier {
   final FilmsService _filmsService;
@@ -9,15 +10,20 @@ class FilmsViewModel extends ChangeNotifier {
   List<Film> _films = [];
   List<Film> _sortedFilms = [];
   SortType _currentSortType = SortType.rating;
+  ViewMode _viewMode = ViewMode.vertical;
+  int _displayLimit = 20;
   bool _isLoading = false;
   String? _error;
 
   FilmsViewModel(this._filmsService);
 
-  List<Film> get films => _sortedFilms;
+  List<Film> get films => _sortedFilms.take(_displayLimit).toList();
   SortType get currentSortType => _currentSortType;
+  ViewMode get viewMode => _viewMode;
+  int get displayLimit => _displayLimit;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  bool get hasMore => _displayLimit < _sortedFilms.length;
 
   Future<void> loadFilms() async {
     _isLoading = true;
@@ -43,6 +49,27 @@ class FilmsViewModel extends ChangeNotifier {
     }
   }
 
+  void setViewMode(ViewMode mode) {
+    if (_viewMode != mode) {
+      _viewMode = mode;
+      notifyListeners();
+    }
+  }
+
+  void setDisplayLimit(int limit) {
+    if (_displayLimit != limit) {
+      _displayLimit = limit;
+      notifyListeners();
+    }
+  }
+
+  void loadMore() {
+    if (_displayLimit < _sortedFilms.length) {
+      _displayLimit = (_displayLimit + 20).clamp(0, _sortedFilms.length);
+      notifyListeners();
+    }
+  }
+
   void _applySorting() {
     _sortedFilms = List.from(_films);
     switch (_currentSortType) {
@@ -56,5 +83,6 @@ class FilmsViewModel extends ChangeNotifier {
         _sortedFilms.sort((a, b) => a.title.compareTo(b.title));
         break;
     }
+    _displayLimit = 20;
   }
 }

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../components/film_card.dart';
+import '../components/horizontal_film_card.dart';
 import '../components/sort_dropdown.dart';
+import '../components/view_toggle.dart';
 import '../components/loading_overlay.dart';
 import '../components/gradient_logo.dart';
 import '../viewmodels/films_viewmodel.dart';
+import '../utils/view_mode.dart';
 
 class FilmsListScreen extends StatefulWidget {
   final int? selectedFilmId;
@@ -94,22 +97,9 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
 
                     return Stack(
                       children: [
-                        ListView.builder(
-                          itemCount: viewModel.films.length,
-                          padding: const EdgeInsets.only(top: 16, bottom: 80),
-                          itemBuilder: (context, index) {
-                            final film = viewModel.films[index];
-                            return FilmCard(
-                              film: film,
-                              onTap: () {
-                                context.push('/film/${film.id}');
-                              },
-                              onFavorite: () {},
-                              onWatchlist: () {},
-                            );
-                          },
-                        ),
+                        _buildFilmList(viewModel),
                         _buildBottomSpotlight(),
+                        if (viewModel.hasMore) _buildLoadMoreButton(viewModel),
                       ],
                     );
                   },
@@ -119,6 +109,58 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
           ),
           _buildVignette(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFilmList(FilmsViewModel viewModel) {
+    if (viewModel.viewMode == ViewMode.horizontal) {
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: viewModel.films.length,
+        padding: const EdgeInsets.only(top: 16, bottom: 80),
+        itemBuilder: (context, index) {
+          final film = viewModel.films[index];
+          return HorizontalFilmCard(
+            film: film,
+            onTap: () => context.push('/film/${film.id}'),
+            onFavorite: () {},
+            onWatchlist: () {},
+          );
+        },
+      );
+    } else {
+      return ListView.builder(
+        itemCount: viewModel.films.length,
+        padding: const EdgeInsets.only(top: 16, bottom: 80),
+        itemBuilder: (context, index) {
+          final film = viewModel.films[index];
+          return FilmCard(
+            film: film,
+            onTap: () => context.push('/film/${film.id}'),
+            onFavorite: () {},
+            onWatchlist: () {},
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildLoadMoreButton(FilmsViewModel viewModel) {
+    return Positioned(
+      bottom: 90,
+      left: 0,
+      right: 0,
+      child: Center(
+        child: OutlinedButton.icon(
+          onPressed: () => viewModel.loadMore(),
+          icon: const Icon(Icons.expand_more),
+          label: const Text('Load More'),
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.grey[850],
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          ),
+        ),
       ),
     );
   }
@@ -140,16 +182,17 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
       child: Column(
         children: [
           const GradientLogo(),
-          const SizedBox(height: 12),
+          const SizedBox(height: 4),
+          Text(
+            'Discover amazing films',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+          const SizedBox(height: 16),
           Row(
             children: [
-              Text(
-                'Films',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-              ),
-              const Spacer(),
               Consumer<FilmsViewModel>(
                 builder: (context, viewModel, _) {
                   return Row(
@@ -163,11 +206,20 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      SortDropdown(
-                        currentSortType: viewModel.currentSortType,
-                        onSortChanged: viewModel.setSortType,
+                      ViewToggle(
+                        currentMode: viewModel.viewMode,
+                        onModeChanged: viewModel.setViewMode,
                       ),
                     ],
+                  );
+                },
+              ),
+              const Spacer(),
+              Consumer<FilmsViewModel>(
+                builder: (context, viewModel, _) {
+                  return SortDropdown(
+                    currentSortType: viewModel.currentSortType,
+                    onSortChanged: viewModel.setSortType,
                   );
                 },
               ),
