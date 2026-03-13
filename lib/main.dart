@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'services/films_service.dart';
 import 'viewmodels/viewmodels.dart';
 import 'utils/app_theme.dart';
+import 'utils/router.dart';
 import 'views/home_screen.dart';
 
 void main() {
@@ -28,11 +29,11 @@ class ViaFilmsApp extends StatelessWidget {
           create: (_) => MainViewModel(),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'ViaFilms',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.darkTheme,
-        home: const HomeScreen(),
+        routerConfig: router,
       ),
     );
   }

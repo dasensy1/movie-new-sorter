@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../components/film_card.dart';
 import '../components/sort_dropdown.dart';
@@ -79,10 +80,7 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
                     return FilmCard(
                       film: film,
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                          '/film',
-                          arguments: film.id,
-                        );
+                        context.push('/film/${film.id}');
                       },
                     );
                   },
