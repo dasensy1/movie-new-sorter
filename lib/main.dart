@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'data/content_data.dart';
 
 void main() {
@@ -179,16 +180,23 @@ class MoviesPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2C3540),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        item.emoji,
-                        style: const TextStyle(fontSize: 48),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: CachedNetworkImage(
+                      imageUrl: item.posterUrl.isNotEmpty ? item.posterUrl : '',
+                      placeholder: (context, url) => Container(
+                        color: const Color(0xFF2C3540),
+                        child: const Center(
+                          child: CircularProgressIndicator(color: Color(0xFF00E054)),
+                        ),
                       ),
+                      errorWidget: (context, url, error) => Container(
+                        color: const Color(0xFF2C3540),
+                        child: Center(
+                          child: Text(item.emoji, style: const TextStyle(fontSize: 48)),
+                        ),
+                      ),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -232,15 +240,29 @@ class MoviesPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 50,
-            height: 75,
-            decoration: BoxDecoration(
-              color: const Color(0xFF2C3540),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(
-              child: Text(movie.emoji, style: const TextStyle(fontSize: 32)),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: CachedNetworkImage(
+              imageUrl: movie.posterUrl.isNotEmpty ? movie.posterUrl : '',
+              width: 50,
+              height: 75,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                width: 50,
+                height: 75,
+                color: const Color(0xFF2C3540),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Color(0xFF00E054), strokeWidth: 2),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                width: 50,
+                height: 75,
+                color: const Color(0xFF2C3540),
+                child: Center(
+                  child: Text(movie.emoji, style: const TextStyle(fontSize: 32)),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -494,15 +516,29 @@ class _SearchPageState extends State<SearchPage> {
       ),
       child: Row(
         children: [
-          Container(
-            width: 50,
-            height: 75,
-            decoration: BoxDecoration(
-              color: const Color(0xFF2C3540),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(
-              child: Text(item.emoji, style: const TextStyle(fontSize: 32)),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: CachedNetworkImage(
+              imageUrl: item.posterUrl.isNotEmpty ? item.posterUrl : '',
+              width: 50,
+              height: 75,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                width: 50,
+                height: 75,
+                color: const Color(0xFF2C3540),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Color(0xFF00E054), strokeWidth: 2),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                width: 50,
+                height: 75,
+                color: const Color(0xFF2C3540),
+                child: Center(
+                  child: Text(item.emoji, style: const TextStyle(fontSize: 32)),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -650,11 +686,16 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                _buildActivityItem('Побег из Шоушенка', 'Добавлен в избранное', '2 часа назад', '🎬'),
-                _buildActivityItem('Крёстный отец', 'Оценён на 5.0 ★', '5 часов назад', '🎩'),
-                _buildActivityItem('Во все тяжкие', 'Добавлен в список', '1 день назад', '🧪'),
-                _buildActivityItem('Атака титанов', 'Написана рецензия', '2 дня назад', '🗿'),
-                _buildActivityItem('Дюна', 'Просмотрено', '3 дня назад', '🏜️'),
+                _buildActivityItem('Побег из Шоушенка', 'Добавлен в избранное', '2 часа назад', '🎬',
+                    posterUrl: 'https://image.tmdb.org/t/p/w300/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'),
+                _buildActivityItem('Крёстный отец', 'Оценён на 5.0 ★', '5 часов назад', '🎩',
+                    posterUrl: 'https://image.tmdb.org/t/p/w300/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'),
+                _buildActivityItem('Во все тяжкие', 'Добавлен в список', '1 день назад', '🧪',
+                    posterUrl: 'https://image.tmdb.org/t/p/w300/ggFHVNu6YYI5L9pCfOacjizRGt.jpg'),
+                _buildActivityItem('Атака титанов', 'Написана рецензия', '2 дня назад', '🗿',
+                    posterUrl: 'https://image.tmdb.org/t/p/w300/h8gZnV9N14M5aVxn8fJGnV9N14M.jpg'),
+                _buildActivityItem('Дюна', 'Просмотрено', '3 дня назад', '🏜️',
+                    posterUrl: 'https://image.tmdb.org/t/p/w300/d5NXSklXo0qyIYkgV94XAgMIckC.jpg'),
               ],
             ),
           ),
@@ -714,19 +755,40 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildActivityItem(String title, String action, String time, String emoji) {
+  Widget _buildActivityItem(String title, String action, String time, String emoji, {String? posterUrl}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Container(
-            width: 40,
-            height: 60,
-            decoration: BoxDecoration(
-              color: const Color(0xFF2C3540),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: posterUrl != null && posterUrl.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: posterUrl,
+                    width: 40,
+                    height: 60,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      width: 40,
+                      height: 60,
+                      color: const Color(0xFF2C3540),
+                      child: const Center(
+                        child: CircularProgressIndicator(color: Color(0xFF00E054), strokeWidth: 2),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      width: 40,
+                      height: 60,
+                      color: const Color(0xFF2C3540),
+                      child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
+                    ),
+                  )
+                : Container(
+                    width: 40,
+                    height: 60,
+                    color: const Color(0xFF2C3540),
+                    child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
+                  ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -849,6 +911,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Шедевр! Лучший фильм о надежде и дружбе. Фильм, который меняет взгляд на жизнь.',
       'date': '10 мар 2026',
       'emoji': '🎬',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg',
     },
     {
       'movie': 'Крёстный отец',
@@ -856,6 +919,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Великолепная игра актёров и режиссура. Классика, которая никогда не устареет.',
       'date': '8 мар 2026',
       'emoji': '🎩',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
     },
     {
       'movie': 'Тёмный рыцарь',
@@ -863,6 +927,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Хит Ledger великолепен в роли Джокера. Лучший фильм о Бэтмене.',
       'date': '5 мар 2026',
       'emoji': '🦇',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
     },
     {
       'movie': 'Интерстеллар',
@@ -870,6 +935,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Нолан снова превзошёл себя. Визуальный шедевр с глубоким смыслом.',
       'date': '1 мар 2026',
       'emoji': '🚀',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/gEU2QniL6E77NI6lCU6MxlNBvIx.jpg',
     },
     {
       'movie': 'Паразиты',
@@ -877,6 +943,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Умный триллер с социальной сатирой. Заслуженный Оскар.',
       'date': '25 фев 2026',
       'emoji': '🏠',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg',
     },
     {
       'movie': 'Во все тяжкие',
@@ -884,6 +951,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Лучший сериал всех времён. Трансформация Уайта — это нечто!',
       'date': '20 фев 2026',
       'emoji': '🧪',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
     },
     {
       'movie': 'Игра престолов',
@@ -891,6 +959,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Первые 6 сезонов — шедевр. Финал подкачал, но всё равно стоит просмотра.',
       'date': '15 фев 2026',
       'emoji': '👑',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/1XS1oqL89opfnbGl83n0Q7PPuxx.jpg',
     },
     {
       'movie': 'Атака титанов',
@@ -898,6 +967,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Аниме, которое ломает стереотипы. Невероятный сюжет и повороты.',
       'date': '10 фев 2026',
       'emoji': '🗿',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/h8gZnV9N14M5aVxn8fJGnV9N14M.jpg',
     },
     {
       'movie': 'Начало',
@@ -905,6 +975,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Запутанный сюжет о снах. Нужно смотреть внимательно.',
       'date': '5 фев 2026',
       'emoji': '🌀',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/9gk7admal4ZLcnwnCSNPVtbnlEy.jpg',
     },
     {
       'movie': 'Матрица',
@@ -912,6 +983,7 @@ class ReviewsPage extends StatelessWidget {
       'text': 'Фильм, изменивший фантастику. Красные таблетки навсегда!',
       'date': '1 фев 2026',
       'emoji': '💊',
+      'posterUrl': 'https://image.tmdb.org/t/p/w300/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg',
     },
   ];
 
@@ -1002,7 +1074,31 @@ class ReviewsPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(review['emoji']!, style: const TextStyle(fontSize: 28)),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: CachedNetworkImage(
+                  imageUrl: review['posterUrl'] ?? '',
+                  width: 50,
+                  height: 75,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    width: 50,
+                    height: 75,
+                    color: const Color(0xFF2C3540),
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Color(0xFF00E054), strokeWidth: 2),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 50,
+                    height: 75,
+                    color: const Color(0xFF2C3540),
+                    child: Center(
+                      child: Text(review['emoji']!, style: const TextStyle(fontSize: 32)),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -1019,6 +1115,7 @@ class ReviewsPage extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: 12),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
