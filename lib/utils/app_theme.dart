@@ -81,9 +81,9 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Color(0xFF1A1A2E),
-        selectedItemColor: Color(0xFF7C4DFF),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: const Color(0xFF1A1A2E),
+        selectedItemColor: const Color(0xFF7C4DFF),
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/main_viewmodel.dart';
-import '../viewmodels/films_viewmodel.dart';
 import 'films_list_screen.dart';
 import 'profile_screen.dart';
 import 'settings_screen.dart';

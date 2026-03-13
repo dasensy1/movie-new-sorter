@@ -4,7 +4,6 @@ import 'services/films_service.dart';
 import 'viewmodels/viewmodels.dart';
 import 'utils/app_theme.dart';
 import 'utils/router.dart';
-import 'views/home_screen.dart';
 
 void main() {
   runApp(const ViaFilmsApp());
