@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../components/film_card.dart';
+import '../components/horizontal_film_card.dart';
 import '../components/sort_dropdown.dart';
+import '../components/view_toggle.dart';
+import '../components/loading_overlay.dart';
+import '../components/gradient_logo.dart';
 import '../viewmodels/films_viewmodel.dart';
+import '../utils/view_mode.dart';
 
 class FilmsListScreen extends StatefulWidget {
   final int? selectedFilmId;
@@ -18,85 +24,248 @@ class _FilmsListScreenState extends State<FilmsListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final viewModel = context.read<FilmsViewModel>();
-      if (viewModel.films.isEmpty) {
-        viewModel.loadFilms();
-      }
+      context.read<FilmsViewModel>().loadFilms();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Films'),
-        actions: [
-          Consumer<FilmsViewModel>(
-            builder: (context, viewModel, _) {
-              return SortDropdown(
-                currentSortType: viewModel.currentSortType,
-                onSortChanged: viewModel.setSortType,
-              );
-            },
+    return SafeArea(
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              _buildHeader(context),
+              Expanded(
+                child: Consumer<FilmsViewModel>(
+                  builder: (context, viewModel, _) {
+                    if (viewModel.isLoading) {
+                      return const LoadingOverlay();
+                    }
+
+                    if (viewModel.error != null) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline, size: 64, color: Colors.grey[600]),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Error loading films',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              viewModel.error!,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[500],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: () => viewModel.loadFilms(),
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    if (viewModel.films.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.movie_outlined, size: 64, color: Colors.grey[700]),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No films available',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: () => viewModel.loadFilms(),
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('Refresh'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return Stack(
+                      children: [
+                        _buildFilmList(viewModel),
+                        _buildBottomSpotlight(),
+                        if (viewModel.hasMore) _buildLoadMoreButton(viewModel),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
+          _buildVignette(),
         ],
       ),
-      body: Consumer<FilmsViewModel>(
-        builder: (context, viewModel, _) {
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    );
+  }
 
-          if (viewModel.error != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error loading films',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    viewModel.error!,
-                    style: Theme.of(context).textTheme.bodySmall,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => viewModel.loadFilms(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (viewModel.films.isEmpty) {
-            return const Center(
-              child: Text('No films available'),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: viewModel.films.length,
-            itemBuilder: (context, index) {
-              final film = viewModel.films[index];
-              return FilmCard(
-                film: film,
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    '/film',
-                    arguments: film.id,
-                  );
-                },
-              );
-            },
+  Widget _buildFilmList(FilmsViewModel viewModel) {
+    if (viewModel.viewMode == ViewMode.horizontal) {
+      return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: viewModel.films.length,
+        padding: const EdgeInsets.only(top: 16, bottom: 80),
+        itemBuilder: (context, index) {
+          final film = viewModel.films[index];
+          return HorizontalFilmCard(
+            film: film,
+            onTap: () => context.push('/film/${film.id}'),
+            onFavorite: () {},
+            onWatchlist: () {},
           );
         },
+      );
+    } else {
+      return ListView.builder(
+        itemCount: viewModel.films.length,
+        padding: const EdgeInsets.only(top: 16, bottom: 80),
+        itemBuilder: (context, index) {
+          final film = viewModel.films[index];
+          return FilmCard(
+            film: film,
+            onTap: () => context.push('/film/${film.id}'),
+            onFavorite: () {},
+            onWatchlist: () {},
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildLoadMoreButton(FilmsViewModel viewModel) {
+    return Positioned(
+      bottom: 90,
+      left: 0,
+      right: 0,
+      child: Center(
+        child: OutlinedButton.icon(
+          onPressed: () => viewModel.loadMore(),
+          icon: const Icon(Icons.expand_more),
+          label: const Text('Load More'),
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.grey[850],
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFF121212),
+            const Color(0xFF121212).withValues(alpha: 0.95),
+            const Color(0xFF121212).withValues(alpha: 0),
+          ],
+        ),
+      ),
+      child: Column(
+        children: [
+          const GradientLogo(),
+          const SizedBox(height: 4),
+          Text(
+            'Discover amazing films',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Consumer<FilmsViewModel>(
+                builder: (context, viewModel, _) {
+                  return Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => viewModel.loadFilms(),
+                        icon: const Icon(Icons.refresh),
+                        tooltip: 'Refresh',
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.grey[850],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ViewToggle(
+                        currentMode: viewModel.viewMode,
+                        onModeChanged: viewModel.setViewMode,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const Spacer(),
+              Consumer<FilmsViewModel>(
+                builder: (context, viewModel, _) {
+                  return SortDropdown(
+                    currentSortType: viewModel.currentSortType,
+                    onSortChanged: viewModel.setSortType,
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomSpotlight() {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [
+              const Color(0xFF1A1A2E).withValues(alpha: 0.3),
+              const Color(0xFF1A1A2E).withValues(alpha: 0.1),
+              Colors.transparent,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVignette() {
+    return IgnorePointer(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment.center,
+            radius: 1.2,
+            colors: [
+              Colors.transparent,
+              const Color(0xFF000000).withValues(alpha: 0.4),
+            ],
+            stops: const [0.7, 1.0],
+          ),
+        ),
       ),
     );
   }

@@ -1,0 +1,4 @@
+enum ViewMode {
+  vertical,
+  horizontal,
+}
