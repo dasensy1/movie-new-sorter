@@ -595,8 +595,16 @@ class ContentData {
       description: 'Переплетённые истории в Лондоне.',
       posterUrl: 'https://image.tmdb.org/t/p/w300/h9gIh7GqjvvJpT0bVpR8V8V8V8V.jpg',
     ),
+    ContentItem(
+      title: 'Матрица',
+      year: '1999',
+      rating: '4.5',
+      emoji: '💊',
+      director: 'Лана Вачовски',
+      genre: 'Фантастика',
       type: 'movie',
       description: 'Нео узнаёт правду о реальности.',
+      posterUrl: 'https://image.tmdb.org/t/p/w300/f89Z4L8ZN8Z8Z8Z8Z8Z8Z8Z8Z8Z.jpg',
     ),
     ContentItem(
       title: 'Интерстеллар',
@@ -1109,10 +1117,6 @@ class ContentData {
       type: 'series',
       description: 'Политические интриги в Вашингтоне.',
       posterUrl: 'https://image.tmdb.org/t/p/w300/hKWxWjXzYBzH7BhXGj1vJl8Xg8.jpg',
-    ),
-      genre: 'Драма',
-      type: 'series',
-      description: 'Политические интриги в Вашингтоне.',
     ),
     ContentItem(
       title: 'Ведьмак',
