@@ -261,11 +261,12 @@ class _FilmDetailScreenState extends State<FilmDetailScreen>
         Expanded(
           child: OutlinedButton.icon(
             onPressed: () {},
-            icon: const Icon(Icons.bookmark_outline, color: Colors.grey[400]),
-            label: const Text('Watchlist', style: TextStyle(color: Colors.grey[300])),
+            icon: const Icon(Icons.bookmark_outline),
+            label: const Text('Watchlist'),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               side: BorderSide(color: Colors.grey[800]!),
+              foregroundColor: Colors.grey[400],
             ),
           ),
         ),

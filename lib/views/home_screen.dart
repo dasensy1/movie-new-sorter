@@ -4,7 +4,6 @@ import '../viewmodels/main_viewmodel.dart';
 import 'films_list_screen.dart';
 import 'profile_screen.dart';
 import 'settings_screen.dart';
-import '../components/loading_overlay.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
